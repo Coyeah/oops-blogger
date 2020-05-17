@@ -6,7 +6,7 @@ const {
   promiser,
   noop
 } = require('../utils');
-const envCheck = require('../utils/check').env;
+const envCheck = require('../operate/check').env;
 
 const get = async () => {
   const hasExist = await envCheck();
@@ -14,7 +14,7 @@ const get = async () => {
   let config = null;
   if (!hasExist) {
     log.warn('blogger 环境未构建，建议构建 blogger 环境；使用命令：\"blogger init\"');
-    return config;
+    return null;
   }
   await promiser(
     fs.readFile,
@@ -29,7 +29,7 @@ const get = async () => {
   return config;
 }
 
-const updated = async (config) => {
+const update = async (config) => {
   if (!config) return;
   config.updatedAt = new moment().format('YYYY-MM-DD HH:mm:ss');
   await promiser(
@@ -42,7 +42,7 @@ const updated = async (config) => {
   });
 }
 
-const create = async () => {
+const create = async (params = {}) => {
   const templatePath = path.join(__dirname, '../template/config.template.json');
   const name = process.cwd().split('/').pop();
   let source = '';
@@ -55,13 +55,25 @@ const create = async () => {
       source = null;
     });
   if (!source) return null;
-  return source
+  const time = new moment().format('YYYY-MM-DD HH:mm:ss'); 
+  source = source
     .replace(/<!--BLOGGER_CONFIG_NAME-->/g, name)
-    .replace(/<!--BLOGGER_CONFIG_CREATEDAT-->/g, new moment().format('YYYY-MM-DD HH:mm:ss'));
+    .replace(/<!--BLOGGER_CONFIG_CREATEDAT-->/g, time);
+  
+  let sourceObj = JSON.parse(source);
+  sourceObj = {
+    ...sourceObj,
+    name,
+    createdAt: time,
+    updatedAt: time,
+    ...params
+  }
+
+  return JSON.stringify(sourceObj);
 }
 
 module.exports = {
   get,
-  updated,
+  update,
   create,
 }

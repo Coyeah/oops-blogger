@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-const promiser = require('./promiser');
-const { noop } = require('./index');
+const promiser = require('../utils/promiser');
+const {
+  noop
+} = require('../utils/index');
 
 const checkExist = async (path) => {
   if (!path) return false;
@@ -12,7 +14,20 @@ const checkExist = async (path) => {
   return isExist;
 }
 
+const checkIsFolder = async (path) => {
+  if (!path) return false;
+  return await promiser(fs.stat, path)
+    .then(stat => {
+      return stat.isDirectory();
+    })
+    .catch(() => {
+      return false;
+    });
+}
+
 module.exports = {
+  checkExist,
+  checkIsFolder,
   env: async () => {
     const configPath = path.join(process.cwd(), '/.blogger/config.json');
     return await checkExist(configPath);
@@ -20,5 +35,5 @@ module.exports = {
   label: async (labelName) => {
     const labelPath = path.join(process.cwd(), `/${labelName}`);
     return await checkExist(labelPath);
-  }
+  },
 }
