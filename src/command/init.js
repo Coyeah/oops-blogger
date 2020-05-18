@@ -11,8 +11,10 @@ module.exports = async () => {
   // 新建相关文件夹
   const templatePath = path.join(process.cwd(), '/_TEMPLATE'),  // 模版
     unpublishedPath = path.join(process.cwd(), '/_UNPUBLISHED');  // 未发布
+    imagesPath = path.join(process.cwd(), '/_IMAGES');  // 未发布
   !await checkExist(templatePath) && fs.mkdirSync(templatePath);
   !await checkExist(unpublishedPath) && fs.mkdirSync(unpublishedPath);
+  !await checkExist(imagesPath) && fs.mkdirSync(imagesPath);
 
   const hasExist = await envCheck();
   if (hasExist) log.warn('blogger 环境已被构建。');

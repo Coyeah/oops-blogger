@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const promiser = require('../utils/promiser');
 const {
-  noop
+  noop,
+  promiser
 } = require('../utils/index');
 
 const checkExist = async (path) => {
@@ -36,4 +36,5 @@ module.exports = {
     const labelPath = path.join(process.cwd(), `/${labelName}`);
     return await checkExist(labelPath);
   },
+  blog: async (params = {}) => {}
 }

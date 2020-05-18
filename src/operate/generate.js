@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const { noop, promiser } = require('../utils/index');
+const {
+  promiser
+} = require('../utils/index');
 
 const createFile = async (path, source) => {
   let isDone = false;
@@ -28,8 +30,10 @@ const label = async (labelName) => {
 }
 
 const blog = async (params) => {
-  if (!params) return false;
-  let title = params.name.replace(/(\s)+/g, "_");
+  if (!params || !params.name) return false;
+  const {
+    title = require('./utils').formatBlogName(params.name)
+  } = params;
   const targetPath = path.join(process.cwd(), `/_TEMPLATE/${title}.md`);
   const source = await require('../template/blog').create(params);
   return await createFile(targetPath, source);

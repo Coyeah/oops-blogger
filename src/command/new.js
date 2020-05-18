@@ -1,5 +1,12 @@
+const path = require('path');
 const inquirer = require('inquirer');
+const uuidv4 = require('uuid').v4;
 const blogGenerate = require('../operate/generate').blog;
+const {
+  formatBlogName,
+  formatNames
+} = require('../operate/utils');
+const checkExist = require('../operate/check').checkExist;
 const {
   log
 } = require('../utils');
@@ -7,6 +14,15 @@ const {
 module.exports = async (blogName, command, labels) => {
   const config = await require('../template/config').get();
   if (!config) return;
+
+  const title = formatBlogName(blogName),
+    templatePath = path.join(process.cwd(), `/_TEMPLATE/${title}.md`);
+  let text = formatNames.blog(blogName);
+  if (!!config.blog2Id[title] || await checkExist(templatePath)) {
+    log.error(`${text} 已存在；使用命令：\"blogger remove [blogName]\" 移除已有博文；`);
+    return;
+  }
+
   if (labels) {
     labels = labels.filter(label => config.labels.includes(label));
     if (labels.length === 0) labels = void(0);
@@ -29,11 +45,13 @@ module.exports = async (blogName, command, labels) => {
     });
   }
 
-  const isGenerate = await blogGenerate({
+  const info = {
+    id: uuidv4(),
     name: blogName,
-    labels
-  });
-  if (isGenerate) log.success(`博文 [ ${blogName} ] 已生成；`);
-  else log.error(`博文[ ${blogName} ]生成失败，请重试！`);
-
+    title,
+    labels,
+  }
+  const isGenerate = await blogGenerate(info);
+  if (isGenerate) log.success(`${text}已生成；`);
+  else log.error(`${text}生成失败，请重试！`);
 }
