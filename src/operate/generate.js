@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = require('path');
+const { bloggerPath, configPath, getLabelPath, getTemplateBlogPath } = require('../common/paths');
 const {
   promiser
 } = require('../utils/index');
@@ -15,17 +15,15 @@ const createFile = async (path, source) => {
 }
 
 const env = async (params = {}) => {
-  const rootPath = path.join(process.cwd(), '/.blogger');
-  const configPath = path.join(rootPath, '/config.json');
-  await promiser(fs.access, rootPath).catch(() => {
-    fs.mkdirSync(rootPath);
+  await promiser(fs.access, bloggerPath).catch(() => {
+    fs.mkdirSync(bloggerPath);
   });
   const source = await require('../template/config').create(params);
   return await createFile(configPath, source);
 }
 
 const label = async (labelName) => {
-  const labelPath = path.join(process.cwd(), `/${labelName}`);
+  const labelPath = getLabelPath(labelName);
   fs.mkdirSync(labelPath);
 }
 
@@ -34,7 +32,7 @@ const blog = async (params) => {
   const {
     title = require('./utils').formatBlogName(params.name)
   } = params;
-  const targetPath = path.join(process.cwd(), `/_TEMPLATE/${title}.md`);
+  const targetPath = getTemplateBlogPath(title);
   const source = await require('../template/blog').create(params);
   return await createFile(targetPath, source);
 }

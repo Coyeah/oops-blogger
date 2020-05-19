@@ -1,18 +1,17 @@
 const fs = require('fs');
-const path = require('path');
 const moment = require('moment');
+const { _blogTemplatePath } = require('../common/paths');
 const {
   log,
   promiser,
 } = require('../utils');
 
 const create = async (params = {}) => {
-  const templatePath = path.join(__dirname, '../template/blog.template.md');
   const {
     name = 'my blog', labels = []
   } = params;
   let source = '';
-  await promiser(fs.readFile, templatePath, 'utf8')
+  await promiser(fs.readFile, _blogTemplatePath, 'utf8')
     .then(result => {
       source = result;
     })

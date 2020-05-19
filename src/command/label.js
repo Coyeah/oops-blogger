@@ -47,6 +47,10 @@ module.exports = async (labelNames) => {
       pageSize: 10,
     }).then(answers => {
       const delLabels = answers.labels;
+      if (delLabels.length === 0) {
+      log.warn('暂无标签可被操作；');
+      return;
+      }
       config.labels = config.labels.filter(i => {
         return !delLabels.includes(i);
       });

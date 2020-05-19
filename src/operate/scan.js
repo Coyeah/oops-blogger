@@ -1,6 +1,6 @@
 const fs = require('fs');
-const path = require('path');
 const promiser = require('../utils/promiser');
+const getLabelPath = require('../common/paths').getLabelPath;
 const checkIsFolder = require('../operate/check').checkIsFolder;
 
 const isLabelFolder = (name) => !(/^(\.|_)/g.test(name));
@@ -11,9 +11,9 @@ const label = async () => {
     .catch(() => []);
   let result = [];
   for (let i = 0, len = list.length; i < len; i++) {
-    const item = list[i];
-    if (await checkIsFolder(path.join(process.cwd(), item))) {
-      result.push(item);
+    const labelName = list[i];
+    if (await checkIsFolder(getLabelPath(labelName))) {
+      result.push(labelName);
     }
   }
   return result;

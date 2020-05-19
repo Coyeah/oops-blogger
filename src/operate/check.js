@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = require('path');
+const { getLabelPath, configPath } = require('../common/paths');
 const {
   noop,
   promiser
@@ -29,12 +29,10 @@ module.exports = {
   checkExist,
   checkIsFolder,
   env: async () => {
-    const configPath = path.join(process.cwd(), '/.blogger/config.json');
     return await checkExist(configPath);
   },
   label: async (labelName) => {
-    const labelPath = path.join(process.cwd(), `/${labelName}`);
-    return await checkExist(labelPath);
+    return await checkExist(getLabelPath(labelName));
   },
   blog: async (params = {}) => {}
 }

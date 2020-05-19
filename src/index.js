@@ -25,11 +25,11 @@ program
   .action(error(require('./command/label')));
   
 program
-  .command('new')
+  .command('add')
   .arguments('<blogName>')
   .option('-l, --label', '指定标签')
   .description('新建博文；')
-  .action(error(require('./command/new')));
+  .action(error(require('./command/add')));
 
 // 处理参数和提供帮助信息
 program.parse(process.argv);

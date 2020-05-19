@@ -1,6 +1,6 @@
 const fs = require('fs');
-const path = require('path');
 const moment = require('moment');
+const { configPath, _configTemplatePath } = require('../common/paths');
 const {
   log,
   promiser,
@@ -10,7 +10,6 @@ const envCheck = require('../operate/check').env;
 
 const get = async () => {
   const hasExist = await envCheck();
-  const configPath = path.join(process.cwd(), '/.blogger/config.json');
   let config = null;
   if (!hasExist) {
     log.warn('blogger 环境未构建，建议构建 blogger 环境；使用命令：\"blogger init\"');
@@ -34,7 +33,7 @@ const update = async (config) => {
   config.updatedAt = new moment().format('YYYY-MM-DD HH:mm:ss');
   await promiser(
     fs.writeFile,
-    path.join(process.cwd(), '/.blogger/config.json'),
+    configPath,
     JSON.stringify(config),
     'utf8'
   ).then(noop).catch(() => {
@@ -43,10 +42,9 @@ const update = async (config) => {
 }
 
 const create = async (params = {}) => {
-  const templatePath = path.join(__dirname, '../template/config.template.json');
   const name = process.cwd().split('/').pop();
   let source = '';
-  await promiser(fs.readFile, templatePath, 'utf8')
+  await promiser(fs.readFile, _configTemplatePath, 'utf8')
     .then(result => {
       source = result;
     })

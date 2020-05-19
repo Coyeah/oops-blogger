@@ -1,17 +1,14 @@
 const fs = require('fs');
-const path = require('path');
 const check = require('../operate/check');
 const envGenerate = require('../operate/generate').env;
 const labelScan = require('../operate/scan').label;
+const { templatePath, unpublishedPath, imagesPath } = require('../common/paths');
 const { log } = require('../utils');
 
 const { checkExist, env: envCheck } = check;
 
 module.exports = async () => {
   // 新建相关文件夹
-  const templatePath = path.join(process.cwd(), '/_TEMPLATE'),  // 模版
-    unpublishedPath = path.join(process.cwd(), '/_UNPUBLISHED');  // 未发布
-    imagesPath = path.join(process.cwd(), '/_IMAGES');  // 未发布
   !await checkExist(templatePath) && fs.mkdirSync(templatePath);
   !await checkExist(unpublishedPath) && fs.mkdirSync(unpublishedPath);
   !await checkExist(imagesPath) && fs.mkdirSync(imagesPath);
