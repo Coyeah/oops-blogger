@@ -1,3 +1,4 @@
+const moment = require('moment');
 const log = require('./log');
 const error = require('./error');
 const promiser = require('./promiser');
@@ -19,4 +20,5 @@ module.exports = {
   log,
   error,
   promiser,
+  getNowTime: () => new moment().format('YYYY-MM-DD HH:mm:ss'),
 }

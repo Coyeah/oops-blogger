@@ -23,6 +23,8 @@ program
   .description('新建/移除标签；')
   .action(error(require('./command/label')));
 
+// ========= blog（unpublished）  ========= //
+
 program
   .command('add')
   .description('新建博文；')
@@ -37,6 +39,16 @@ program
   .command('show')
   .description('查看博文；')
   .action(error(require('./command/show')));
+
+// ========= blog（published）  ========= //
+
+program
+  .command('publish')
+  .arguments('[identity]')
+  .description('发布博文；')
+  .action(error(require('./command/publish')));
+  
+
 
 // 处理参数和提供帮助信息
 program.parse(process.argv);

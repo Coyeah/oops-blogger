@@ -5,16 +5,16 @@ const {
   update
 } = require('../template/config');
 const blogScan = require('../operate/scan').blog;
-const error = require('../utils/error').inquirer;
+// const error = require('../utils/error').inquirer;
 
 const grid = new Grid();
-const operateType = [{
-  name: '未发布',
-  value: 0
-}, {
-  name: '发布',
-  value: 1
-}];
+// const operateType = [{
+//   name: '未发布',
+//   value: 0
+// }, {
+//   name: '发布',
+//   value: 1
+// }];
 
 module.exports = async () => {
   let data = {
@@ -32,19 +32,23 @@ module.exports = async () => {
       name: "标签分类",
       type: "string",
       maxWidth: 30
+    }, {
+      id: 'createAt',
+      name: '创建时间',
+      type: 'string',
     }],
   };
 
   let isPublished = false;
-  await inquirer
-    .prompt({
-      type: 'list',
-      name: 'type',
-      message: '查看博文类型',
-      choices: operateType,
-    })
-    .then(answers => isPublished = !!answers.type)
-    .catch(error);
+  // await inquirer
+  //   .prompt({
+  //     type: 'list',
+  //     name: 'type',
+  //     message: '查看博文类型',
+  //     choices: operateType,
+  //   })
+  //   .then(answers => isPublished = !!answers.type)
+  //   .catch(error);
 
   if (isPublished) {
 
@@ -62,7 +66,7 @@ module.exports = async () => {
       }
       return null
     }).filter(i => !!i);
-    
+
     config.blog = newBlog;
     update(config);
 

@@ -3,8 +3,5 @@
 
 ***请开始你的博文之旅***
 
----
-
-name: <!--BLOG_NAME-->;
-labels: <!--BLOG_LABELS-->;
-createdAt: <!--BLOG_CREATED_AT-->;
+<!--PLEASE_DONT_DELETE-->
+<!--BLOGGER_MARK_ANNOTATE-->

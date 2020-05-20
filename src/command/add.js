@@ -14,7 +14,8 @@ const {
 } = require('../template/config');
 const {
   log,
-  shortid
+  shortid,
+  getNowTime,
 } = require('../utils');
 const error = require('../utils/error').inquirer;
 
@@ -31,11 +32,17 @@ module.exports = async () => {
     })
     .then(answers => name = answers.name)
     .catch(error);
+  if (!name) {
+    log.error(`文章题目不可为空！`);
+    return;
+  }
 
   const title = formatBlogName(name);
   let text = formatNames.blog(name);
-  if (!!config.blog[title] || await checkExist(getTemplateBlogPath(title)))
+  if (!!config.blog[title] || await checkExist(getTemplateBlogPath(title))) {
     log.error(`${text}已存在；使用命令：\"blogger remove\" 移除已有博文；`);
+    return;
+  }
 
   let labels = [];
   await inquirer
@@ -54,6 +61,7 @@ module.exports = async () => {
     name,
     title,
     labels,
+    createdAt: getNowTime(),
   }
   const isGenerate = await blogGenerate(info);
   if (isGenerate) {

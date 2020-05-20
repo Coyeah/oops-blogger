@@ -25,14 +25,25 @@ const checkIsFolder = async (path) => {
     });
 }
 
+const checkIsFile = async (path) => {
+  if (!path) return false;
+  return await promiser(fs.stat, path)
+    .then(stat => {
+      return stat.isFile();
+    })
+    .catch(() => {
+      return false;
+    });
+}
+
 module.exports = {
   checkExist,
   checkIsFolder,
+  checkIsFile,
   env: async () => {
     return await checkExist(configPath);
   },
   label: async (labelName) => {
     return await checkExist(getLabelPath(labelName));
   },
-  blog: async (params = {}) => {}
 }
