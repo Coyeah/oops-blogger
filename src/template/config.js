@@ -1,6 +1,8 @@
 const fs = require('fs');
 const moment = require('moment');
-const { configPath, _configTemplatePath } = require('../common/paths');
+const {
+  configPath,
+} = require('../common/paths');
 const {
   log,
   promiser,
@@ -43,27 +45,13 @@ const update = async (config) => {
 
 const create = async (params = {}) => {
   const name = process.cwd().split('/').pop();
-  let source = '';
-  await promiser(fs.readFile, _configTemplatePath, 'utf8')
-    .then(result => {
-      source = result;
-    })
-    .catch(err => {
-      log.unknown();
-      source = null;
-    });
-  if (!source) return null;
-  const time = new moment().format('YYYY-MM-DD HH:mm:ss'); 
-  source = source
-    .replace(/<!--BLOGGER_CONFIG_NAME-->/g, name)
-    .replace(/<!--BLOGGER_CONFIG_CREATEDAT-->/g, time);
-  
-  let sourceObj = JSON.parse(source);
-  sourceObj = {
-    ...sourceObj,
+  const time = new moment().format('YYYY-MM-DD HH:mm:ss');
+  const sourceObj = {
     name,
     createdAt: time,
     updatedAt: time,
+    labels: [],
+    blog: {},
     ...params
   }
 

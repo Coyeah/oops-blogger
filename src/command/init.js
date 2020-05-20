@@ -1,11 +1,9 @@
 const fs = require('fs');
-const check = require('../operate/check');
+const { checkExist, env: envCheck } = require('../operate/check');
 const envGenerate = require('../operate/generate').env;
 const labelScan = require('../operate/scan').label;
 const { templatePath, unpublishedPath, imagesPath } = require('../common/paths');
 const { log } = require('../utils');
-
-const { checkExist, env: envCheck } = check;
 
 module.exports = async () => {
   // 新建相关文件夹

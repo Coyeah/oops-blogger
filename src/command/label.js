@@ -1,5 +1,8 @@
 const inquirer = require('inquirer');
-const bloggerConfig = require('../template/config');
+const {
+  get,
+  update
+} = require('../template/config');
 const labelCheck = require('../operate/check').label;
 const labelGenerate = require('../operate/generate').label;
 const {
@@ -8,18 +11,41 @@ const {
 const {
   log
 } = require('../utils');
+const error = require('../utils/error').inquirer;
 
-const {
-  get,
-  update
-} = bloggerConfig;
+const operateType = [{
+  name: '新增标签',
+  value: 1
+}, {
+  name: '删除标签',
+  value: 0
+}];
 
-module.exports = async (labelNames) => {
+module.exports = async () => {
+  let isAddLabel = true;
+  await inquirer
+    .prompt({
+      type: 'list',
+      name: 'type',
+      message: '操作类型',
+      choices: operateType,
+    })
+    .then(answers => isAddLabel = !!answers.type)
+    .catch(error);
+
   const config = await get();
-
-  if (labelNames.length !== 0) {
-    for (let i = 0; i < labelNames.length; i++) {
-      const labelName = labelNames[i];
+  if (isAddLabel) {
+    let labels = [];
+    await inquirer
+      .prompt({
+        type: 'input',
+        name: 'labels',
+        message: '标签名称（批量操作可用空格分割）'
+      })
+      .then(answers => labels = answers.labels.split(' ').filter(i => !!i))
+      .catch(error);
+    for (let i = 0, len = labels.length; i < labels.length; i++) {
+      const labelName = labels[i];
       let text = formatNames.label(labelName);
       if (config) {
         if (config.labels.includes(labelName)) {
@@ -39,31 +65,23 @@ module.exports = async (labelNames) => {
       }
     }
   } else if (config && config.labels.length !== 0) {
-    log.info(`请选择要删除的标签：`);
-    await inquirer.prompt({
-      type: 'checkbox',
-      name: 'labels',
-      choices: config.labels,
-      pageSize: 10,
-    }).then(answers => {
-      const delLabels = answers.labels;
-      if (delLabels.length === 0) {
-      log.warn('暂无标签可被操作；');
-      return;
-      }
-      config.labels = config.labels.filter(i => {
-        return !delLabels.includes(i);
-      });
-      const text = formatNames.label(delLabels.toString());
-      log.success(`${text}移除成功！`);
-      log.success(`当前${text};`);
-    }).catch(error => {
-      if (error.isTtyError) {
-        log.error('操作面板无法在当前工具正确展示；');
-      } else {
-        log.unknown();
-      }
-    });
+    await inquirer
+      .prompt({
+        type: 'checkbox',
+        name: 'labels',
+        choices: config.labels,
+        pageSize: 6,
+      })
+      .then(answers => {
+        const delLabels = answers.labels;
+        if (delLabels.length === 0) {
+          log.warn('暂无标签可被操作；');
+          return;
+        }
+        config.labels = config.labels.filter(i => !delLabels.includes(i));
+        log.success(`${formatNames.label(delLabels.toString())}移除成功！`);
+      })
+      .catch(error);
   } else {
     log.warn(`暂无标签可被操作；`);
   }

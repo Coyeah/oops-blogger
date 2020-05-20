@@ -147,6 +147,11 @@ concat-map@0.0.1:
   resolved "https://registry.npm.taobao.org/concat-map/download/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
 
+console-grid@^1.0.16:
+  version "1.0.16"
+  resolved "https://registry.npm.taobao.org/console-grid/download/console-grid-1.0.16.tgz#dd8cc20c0cea2222026f5b6c77c6a4f8fbe7d744"
+  integrity sha1-3YzCDAzqIiICb1tsd8ak+Pvn10Q=
+
 decamelize@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npm.taobao.org/decamelize/download/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"

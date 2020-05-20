@@ -1,6 +1,9 @@
 const fs = require('fs');
 const promiser = require('../utils/promiser');
-const getLabelPath = require('../common/paths').getLabelPath;
+const {
+  getLabelPath,
+  templatePath
+} = require('../common/paths');
 const checkIsFolder = require('../operate/check').checkIsFolder;
 
 const isLabelFolder = (name) => !(/^(\.|_)/g.test(name));
@@ -19,6 +22,20 @@ const label = async () => {
   return result;
 }
 
+const blog = async (path) => {
+  let list = [];
+  if (!path) {
+    // 若没有传入路径，默认 _template 下的博文；
+    list = await promiser(fs.readdir, templatePath)
+      .then(fileList => fileList.map(item => item.split('.').shift()))
+      .catch(() => []);
+  } else {
+
+  }
+  return list;
+}
+
 module.exports = {
   label,
+  blog,
 }

@@ -1,6 +1,13 @@
 const fs = require('fs');
-const { bloggerPath, configPath, getLabelPath, getTemplateBlogPath } = require('../common/paths');
 const {
+  bloggerPath,
+  configPath,
+  publishPath,
+  getLabelPath,
+  getTemplateBlogPath
+} = require('../common/paths');
+const {
+  log,
   promiser
 } = require('../utils/index');
 
@@ -9,7 +16,7 @@ const createFile = async (path, source) => {
   await promiser(fs.writeFile, path, source, 'utf8').then(() => {
     isDone = true;
   }).catch((err) => {
-    console.log(err);
+    log.error(err);
   });
   return isDone;
 }
@@ -19,6 +26,7 @@ const env = async (params = {}) => {
     fs.mkdirSync(bloggerPath);
   });
   const source = await require('../template/config').create(params);
+  await createFile(publishPath, '{}');
   return await createFile(configPath, source);
 }
 
@@ -41,4 +49,6 @@ module.exports = {
   env,
   label,
   blog,
+  createFile,
+
 }

@@ -6,10 +6,10 @@ module.exports = {
   imagesPath: path.join(process.cwd(), '/_IMAGES'),
   bloggerPath: path.join(process.cwd(), '/.blogger'),
   configPath: path.join(process.cwd(), '/.blogger/config.json'),
+  publishPath: path.join(process.cwd(), '/.blogger/config.publish.json'),
 
   getTemplateBlogPath: title => path.join(process.cwd(), `/_TEMPLATE/${title}.md`),
   getLabelPath: labelName => path.join(process.cwd(), `/${labelName}`),
 
   _blogTemplatePath: path.join(__dirname, '../template/blog.template.md'),
-  _configTemplatePath: path.join(__dirname, '../template/config.template.json'),
 }
