@@ -43,6 +43,11 @@ const update = async (config) => {
   });
 }
 
+const initialConfig = {
+  scripts: {},
+  blog: {},
+}
+
 const create = async (params = {}) => {
   const name = process.cwd().split('/').pop();
   const time = new moment().format('YYYY-MM-DD HH:mm:ss');
@@ -50,8 +55,7 @@ const create = async (params = {}) => {
     name,
     createdAt: time,
     updatedAt: time,
-    labels: [],
-    blog: {},
+    ...initialConfig,
     ...params
   }
 

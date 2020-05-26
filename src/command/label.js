@@ -9,7 +9,8 @@ const {
   formatNames
 } = require('../operate/utils');
 const {
-  log
+  log,
+  getUniqueId,
 } = require('../utils');
 const error = require('../utils/error').inquirer;
 
@@ -32,27 +33,39 @@ module.exports = async () => {
     })
     .then(answers => isAddLabel = !!answers.type)
     .catch(error);
-
   const config = await get();
+  let labelNameMap = {};
+  const labels = Object.keys(config.labels).map(key => {
+    const name = config.labels[key].name;
+    labelNameMap[name] = key;
+    return {
+      name,
+      value: key,
+    };
+  });
   if (isAddLabel) {
-    let labels = [];
+    let labelList = [];
     await inquirer
       .prompt({
         type: 'input',
         name: 'labels',
         message: '标签名称（批量操作可用空格分割）'
       })
-      .then(answers => labels = answers.labels.split(' ').filter(i => !!i))
+      .then(answers => labelList = answers.labels.split(' ').filter(i => !!i))
       .catch(error);
-    for (let i = 0, len = labels.length; i < labels.length; i++) {
-      const labelName = labels[i];
+    for (let i = 0, len = labelList.length; i < len; i++) {
+      const labelName = labelList[i];
+      const id = getUniqueId(config.labels);
       let text = formatNames.label(labelName);
       if (config) {
-        if (config.labels.includes(labelName)) {
+        if (!!labelNameMap[labelName]) {
           log.warn(`${text}已存在；`);
         } else {
-          config.labels.push(labelName);
           log.success(`${text}创建成功！`);
+          config.labels[id] = {
+            name: labelName,
+            id,
+          };
         }
       }
       const hasExist = await labelCheck(labelName);
@@ -69,7 +82,7 @@ module.exports = async () => {
       .prompt({
         type: 'checkbox',
         name: 'labels',
-        choices: config.labels,
+        choices: labels,
         pageSize: 6,
       })
       .then(answers => {
@@ -78,7 +91,9 @@ module.exports = async () => {
           log.warn('暂无标签可被操作；');
           return;
         }
-        config.labels = config.labels.filter(i => !delLabels.includes(i));
+        delLabels.map(key => {
+          delete config.labels[key];
+        });
         log.success(`${formatNames.label(delLabels.toString())}移除成功！`);
       })
       .catch(error);

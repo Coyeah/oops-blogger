@@ -5,6 +5,9 @@ const {
   templatePath
 } = require('../common/paths');
 const checkIsFolder = require('../operate/check').checkIsFolder;
+const {
+  getUniqueId
+} = require('../utils/index');
 
 const isLabelFolder = (name) => !(/^(\.|_)/g.test(name));
 
@@ -12,11 +15,15 @@ const label = async () => {
   const list = await promiser(fs.readdir, process.cwd())
     .then(fileList => fileList.filter(isLabelFolder))
     .catch(() => []);
-  let result = [];
+  let result = {};
   for (let i = 0, len = list.length; i < len; i++) {
     const labelName = list[i];
     if (await checkIsFolder(getLabelPath(labelName))) {
-      result.push(labelName);
+      const id = getUniqueId(result);
+      result[id] = {
+        name: labelName,
+        id,
+      }
     }
   }
   return result;

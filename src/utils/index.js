@@ -14,8 +14,20 @@ function shortid () {
   return id;
 }
 
+function getUniqueId(map = {}) {
+  let id = shortid();
+  while (true) {
+    if (!map[id]) break;
+    else {
+      id = shortid();
+    }
+  }
+  return id
+}
+
 module.exports = {
   shortid,
+  getUniqueId,
   noop: () => {},
   log,
   error,

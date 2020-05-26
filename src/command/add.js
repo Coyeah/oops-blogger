@@ -14,7 +14,7 @@ const {
 } = require('../template/config');
 const {
   log,
-  shortid,
+  getUniqueId,
   getNowTime,
 } = require('../utils');
 const error = require('../utils/error').inquirer;
@@ -57,7 +57,7 @@ module.exports = async () => {
     .catch(error);
 
   const info = {
-    id: getId(config.blog),
+    id: getUniqueId(config.blog),
     name,
     title,
     labels,
@@ -69,15 +69,4 @@ module.exports = async () => {
     await update(config);
     log.success(`${text}已生成；文件路径：${getTemplateBlogPath(title)}`);
   } else log.error(`${text}生成失败，请重试！`);
-}
-
-function getId(map) {
-  let id = shortid();
-  while (true) {
-    if (!map[id]) break;
-    else {
-      id = shortid();
-    }
-  }
-  return id
 }
