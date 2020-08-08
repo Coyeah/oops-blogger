@@ -27,6 +27,7 @@ module.exports = (argv) => {
     .prompt(questionList)
     .then(answer => {
       answer.title = answer.title || title || '新建文章';
+      answer.date = answer.date || nowDate;
 
       const location = path.join(__dirname, '../template/article.md');
       const targetLocation = path.join(root, `${answer.title.replace(/\s/g, '-')}.md`);

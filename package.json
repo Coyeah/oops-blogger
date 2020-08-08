@@ -1,6 +1,6 @@
 {
   "name": "oops-blogger",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "快速生成 markdown 来编写文章。",
   "main": "index.js",
   "bin": {

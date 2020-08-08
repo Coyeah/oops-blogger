@@ -2,6 +2,8 @@
 
 一个快速生成 markdown 来编写文章的工具。
 
+## 使用
+
 ```shell
 npm i oops-blogger -g
 
