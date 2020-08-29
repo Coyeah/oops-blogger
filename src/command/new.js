@@ -29,6 +29,12 @@ module.exports = (argv) => {
       answer.title = answer.title || title || '新建文章';
       answer.date = answer.date || nowDate;
 
+      try {
+        fs.readFileSync(path.resolve(process.cwd(), `${answer.title}.md`));
+        console.info(chalk.redBright('[blogger]'), `${answer.title}.md 已存在！`);
+        return;
+      } catch (ex) {}
+
       const location = path.join(__dirname, '../template/article.md');
       const targetLocation = path.join(root, `${answer.title.replace(/\s/g, '-')}.md`);
       let template = fs.readFileSync(location, 'utf-8');

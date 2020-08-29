@@ -7,5 +7,5 @@
 ```shell
 npm i oops-blogger -g
 
-blogger new 我的第一篇文章
+blogger new 我的第一篇文章 [-r ./]
 ```
