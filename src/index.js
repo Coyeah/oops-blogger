@@ -6,12 +6,17 @@ const cwd = process.cwd();
 
 const argv = yargs
   .command('new [title]', 'Create a new blog.', yargs => {
-    yargs.positional('r', {
+    return yargs.positional('r', {
       alias: 'root',
       describe: 'custom file path.',
       type: 'string',
-      default: cwd,
-    })
+      default: '',
+    }).positional('d', {
+      alias: 'date',
+      describe: 'date format',
+      type: 'string',
+      default: null,
+    });
   })
   .help()
   .alias('help', 'h')
