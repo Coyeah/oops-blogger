@@ -1,6 +1,6 @@
 {
   "name": "oops-blogger",
-  "version": "0.1.2",
+  "version": "0.2.1",
   "description": "快速生成 markdown 编写文章。",
   "main": "index.js",
   "bin": {
@@ -23,9 +23,10 @@
   },
   "homepage": "https://github.com/Coyeah/oops-blogger#readme",
   "dependencies": {
-    "chalk": "^4.1.0",
-    "inquirer": "^7.3.3",
+    "chalk": "^4.1.1",
+    "ejs": "^3.1.6",
+    "inquirer": "^8.0.0",
     "moment": "^2.27.0",
-    "yargs": "^15.4.1"
+    "yargs": "^16.2.0"
   }
 }
