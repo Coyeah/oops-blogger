@@ -3,6 +3,7 @@ const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const { DATE_FORMAT_ENUM } = require('./utils/date');
 
+const CWD = process.cwd();
 const argv = yargs(hideBin(process.argv))
   .usage('Usage: blogger new [title] <options>')
   .group(['r', 'd', 'f'], '新建文章：')
@@ -29,6 +30,7 @@ const argv = yargs(hideBin(process.argv))
   .argv;
 
 (async function () {
+  argv.CWD = CWD;
   if (argv._.includes('new')) {
     argv.title = typeof argv._[1] === 'undefined' ? void (0) : String(argv._[1]);
     await require('./command/new')(argv);

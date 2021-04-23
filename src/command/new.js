@@ -11,7 +11,6 @@ const { checkFolder, createFile } = require("../utils/fs");
 
 const TEMPLATE_PATH = path.join(__dirname, "../template/text_v1.ejs");
 const TEMPLATE_FILENAME = "index";
-const CWD = process.cwd();
 const QUERTION_ITEM = {
     TITLE: {
         type: "input",
@@ -64,7 +63,7 @@ const QUERTION_ITEM = {
                     typeof answer.title === "string"
                         ? answer.title.trim()
                         : defaultTitle.trim();
-                return title.replace(/\s/g, "-");
+                return title.replace(/(\s|\.)/g, "-");
             },
         };
     },
@@ -72,11 +71,12 @@ const QUERTION_ITEM = {
 
 module.exports = (argv) => {
     if (!argv) return;
-    let {
+    const {
         title: defaultTitle,
         date: defaultDateFormat,
         file: isFile,
         root,
+        CWD,
     } = argv;
 
     const qList = [
