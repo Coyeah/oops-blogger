@@ -2,7 +2,7 @@
 
 一个快速生成 markdown 来编写文章的工具。
 
-## 使用
+## 开始
 
 ```shell
 npm i oops-blogger -g
@@ -10,10 +10,21 @@ npm i oops-blogger -g
 blogger new 我的第一篇文章 [-r ./] [-d iso] [-f]
 ```
 
-+ -r | --root:  生成文件的路径，相对当前命令下的路径，默认当前路径；
-+ -d | --date:  生成时间的格式，默认 ymd；
-  + ymd:        YYYY-MM-DD
-  + ymdhms:     YYYY-MM-DD HH:mm:ss
-  + timestamp:  时间戳
-+ iso：         ISO
-+ -f | --file:  是否以文件为单位，否则以文件夹的形式为一个文档的单位；默认否；
+## 使用
+
+```shell
+blogger --help
+```
+
+```text
+Usage: blogger new [title] <options>
+
+新建文章：
+  -r, --root  相对路径                                   [字符串] [默认值: "./"]
+  -d, --date  时间格式    [字符串] [可选值: "ymd", "iso", "timestamp", "ymdhms"]
+  -f, --file  构建单个文件                                [布尔] [默认值: false]
+
+选项：
+      --version  显示版本号                                               [布尔]
+  -h, --help     显示帮助信息                                             [布尔]
+```
