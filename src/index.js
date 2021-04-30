@@ -7,6 +7,7 @@ const CWD = process.cwd();
 const argv = yargs(hideBin(process.argv))
   .usage('Usage: blogger new [title] <options>')
   .group(['r', 'd', 'f'], '新建文章：')
+  .group(['r', 's'], '浏览文章：')
   .option('r', {
     alias: 'root',
     describe: '相对路径',
@@ -25,6 +26,12 @@ const argv = yargs(hideBin(process.argv))
     type: 'boolean',
     default: false,
   })
+  .option('s', {
+    alias: 'size',
+    describe: '单页条目数量',
+    type: 'number',
+    default: 15,
+  })
   .help()
   .alias('help', 'h')
   .argv;
@@ -34,5 +41,7 @@ const argv = yargs(hideBin(process.argv))
   if (argv._.includes('new')) {
     argv.title = typeof argv._[1] === 'undefined' ? void (0) : String(argv._[1]);
     await require('./command/new')(argv);
+  } else if (argv._.includes('list')) {
+    await require('./command/list')(argv);
   }
 })();

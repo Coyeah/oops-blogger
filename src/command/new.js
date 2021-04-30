@@ -4,10 +4,10 @@ const fs = require("fs");
 const path = require("path");
 const moment = require("moment");
 const inquirer = require("inquirer");
-const chalk = require("chalk");
 
 const { getDate, DATE_FORMAT_ENUM } = require("../utils/date");
 const { checkFolder, createFile } = require("../utils/fs");
+const { printError, printText } = require("../utils/print");
 
 const TEMPLATE_PATH = path.join(__dirname, "../template/text_v1.ejs");
 const TEMPLATE_FILENAME = "index";
@@ -112,19 +112,13 @@ module.exports = (argv) => {
 
             !isFile && checkFolder(targetPath, true);
             createFile(filePath, content);
-            console.info(chalk.greenBright("[blogger]"), `《${title}》 新建成功！`);
+            printText(`《${title}》 新建成功！`)
         })
-        .catch((error) => {
-            if (error.isTtyError) {
-                console.info(
-                    chalk.redBright("[blogger]"),
-                    "render error, please change CMD!"
-                );
+        .catch((e) => {
+            if (e.isTtyError) {
+                printError("render error, please change CMD!");
             } else {
-                console.info(
-                    chalk.redBright("[blogger]"),
-                    error.name + ": " + error.message
-                );
+                printError(e)
             }
         });
 };

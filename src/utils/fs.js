@@ -1,5 +1,26 @@
 const fs = require("fs");
 
+const markdown_reg = /^\-\-\-\n(\s|\S)*\n\-\-\-\n/;
+
+function readMarkdown(targetPath, ext = '.md') {
+    const data = fs.readFileSync(targetPath + ext, "utf-8");
+    const target = data.match(markdown_reg);
+    const index = target.index;
+    if (index !== 0) return;
+    const [str] = target;
+    const result = {};
+    str
+        .replace(/\-\-\-\n/g, "")
+        .split("\n")
+        .forEach((i) => {
+            if (!i) return;
+            const [title, content] = i.split(/\:\s/);
+            result[title] = content.replace(/(\"|\')/g, "");
+        });
+
+    return result;
+}
+
 function checkFolder(targetPath, mkdir = false) {
     if (!targetPath) return false;
     let result = false;
@@ -25,7 +46,7 @@ function createFile(targetPath, content) {
     let v = 0;
     let result = false;
     while (!result) {
-        const suffix = (v === 0 ? '' : `_v${v}`) + '.md';
+        const suffix = (v === 0 ? "" : `_v${v}`) + ".md";
         try {
             const stats = fs.statSync(targetPath + suffix);
             if (stats.isDirectory()) {
@@ -43,4 +64,5 @@ function createFile(targetPath, content) {
 module.exports = {
     checkFolder,
     createFile,
+    readMarkdown,
 };

@@ -1,6 +1,9 @@
 # oops-blogger
 
-一个快速生成 markdown 来编写文章的工具。
+[![npm version](https://badge.fury.io/js/oops-blogger.svg)](https://badge.fury.io/js/oops-blogger)
+[![npm downloads](https://img.shields.io/npm/dm/oops-blogger.svg?style=flat-square)](http://npm-stat.com/charts.html?package=oops-blogger)
+
+🔧 **快速生成 markdown 模板**
 
 ## 开始
 
@@ -23,6 +26,10 @@ Usage: blogger new [title] <options>
   -r, --root  相对路径                                   [字符串] [默认值: "./"]
   -d, --date  时间格式    [字符串] [可选值: "ymd", "iso", "timestamp", "ymdhms"]
   -f, --file  构建单个文件                                [布尔] [默认值: false]
+
+浏览文章：
+  -r, --root  相对路径                                   [字符串] [默认值: "./"]
+  -s, --size  单页条目数量                                   [数字] [默认值: 15]
 
 选项：
       --version  显示版本号                                               [布尔]
