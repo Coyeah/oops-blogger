@@ -1,10 +1,10 @@
 const chalk = require("chalk");
 
 const printPost = data => {
-    console.info('>>>>', chalk.greenBright(`${data.title}`));
-    console.info('path', data.path);
-    console.info('date', data.date);
-    console.info(chalk.blackBright('========================='));
+    console.info(chalk.greenBright("[blogger]"), chalk.greenBright(`${data.title}`));
+    console.info("   path: ", data.path);
+    console.info("   date: ", data.date);
+    console.info(chalk.blackBright('========='));
 }
 
 const printText = str => {
