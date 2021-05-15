@@ -2,10 +2,8 @@
   "name": "oops-blogger",
   "version": "0.3.2",
   "description": "Quickly generate markdown templates.",
-  "main": "index.js",
   "bin": {
-    "blogger": "./bin/index.js",
-    "bg": "./bin/index.js"
+    "blogger": "./bin/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

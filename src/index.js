@@ -6,6 +6,7 @@ const { DATE_FORMAT_ENUM } = require('./utils/date');
 const CWD = process.cwd();
 const argv = yargs(hideBin(process.argv))
   .usage('Usage: blogger new [title] <options>')
+  .usage('Usage: blogger list <options>')
   .group(['r', 'd', 'f'], '新建文章：')
   .group(['r', 's', 'e'], '浏览文章：')
   .option('r', {
