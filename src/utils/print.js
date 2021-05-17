@@ -16,6 +16,8 @@ const printText = str => {
 }
 
 const printError = e => {
+    if (!e) return;
+    
     if (e instanceof Error) {
         console.info(
             chalk.redBright("[blogger]"),
