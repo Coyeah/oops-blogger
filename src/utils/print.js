@@ -19,13 +19,13 @@ const printError = e => {
     if (!e) return;
     
     if (e instanceof Error) {
-        console.info(
+        console.error(
             chalk.redBright("[blogger]"),
             e.name + ": " + e.message
         );
         return;
     }
-    console.info(
+    console.error(
         chalk.redBright("[blogger]"),
         e
     );

@@ -24,7 +24,6 @@ blogger --help
 ```text
 Usage: blogger new [title] <options>
 Usage: blogger list <options>
-Usage: blogger edit <options>
 
 新建文章[new]：
   -r, --root  相对路径                                   [字符串] [默认值: "./"]
@@ -34,10 +33,6 @@ Usage: blogger edit <options>
 浏览文章[list]：
   -r, --root  相对路径                                   [字符串] [默认值: "./"]
   -s, --size  单页条目数量                                   [数字] [默认值: 15]
-  -e, --edit  打开选中文章，可选打开方式
-
-编辑文章[edit]：
-  -p, --path  指定文章路径                                 [字符串] [默认值: ""]
   -e, --edit  打开选中文章，可选打开方式
 
 选项：

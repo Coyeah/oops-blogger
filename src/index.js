@@ -7,10 +7,8 @@ const CWD = process.cwd();
 const argv = yargs(hideBin(process.argv))
     .usage('Usage: blogger new [title] <options>')
     .usage('Usage: blogger list <options>')
-    .usage('Usage: blogger edit <options>')
     .group(['r', 'd', 'f'], '新建文章[new]：')
     .group(['r', 's', 'e'], '浏览文章[list]：')
-    .group(['p', 'e'], '编辑文章[edit]：')
     .option('r', {
         alias: 'root',
         describe: '相对路径',
@@ -38,11 +36,6 @@ const argv = yargs(hideBin(process.argv))
     .option('e', {
         alias: 'edit',
         describe: '打开选中文章，可选打开方式',
-    })
-    .option('p', {
-        alias: 'path',
-        describe: '指定文章路径',
-        type: 'string',
     })
     .help()
     .alias('help', 'h')
