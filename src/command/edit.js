@@ -1,11 +1,12 @@
 const exec = require('child_process').execSync;
 const inquirer = require("inquirer");
 
-const { printText, printError } = require("../utils/print");
+const { printText, printError, printPost } = require("../utils/print");
 const { getBlogList } = require("../utils/fs");
 
 module.exports = async (argv, blogList) => {
-    try {
+
+    (async function () {
         const { path, edit, size } = argv;
 
         const q = [];
@@ -41,17 +42,19 @@ module.exports = async (argv, blogList) => {
 
         if (q.length) {
             const { post, way = edit } = await inquirer.prompt(q);
+            printPost(post);
             _edit = way;
             _path = post ? post.path : path;
         }
 
         printText(['运行命令', `${_edit} ${_path}`]);
         exec(`${_edit} ${_path}`, { stdio: 'inherit' });
-    } catch (e) {
-        if (e.isTtyError) {
-            printError("render error, please change CMD!");
-        } else {
-            printError(e);
-        }
-    }
+    })()
+        .catch(e => {
+            if (e.isTtyError) {
+                printError("render error, please change CMD!");
+            } else {
+                printError(e);
+            }
+        })
 }

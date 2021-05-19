@@ -8,6 +8,11 @@ module.exports = (argv) => {
 
     let globalList = [];
 
+    if (edit) {
+        require("./edit")(argv);
+        return;
+    }
+
     getBlogList(argv)
         .then((list) => {
 
@@ -15,27 +20,6 @@ module.exports = (argv) => {
 
             if (list.length > size) {
                 list.push(new inquirer.Separator());
-            }
-
-            if (edit) {
-                const result = [{
-                    type: "list",
-                    name: "post",
-                    message: "选择文章：",
-                    pageSize: size,
-                    choices: list,
-                }];
-
-                if (typeof edit !== 'string') {
-                    result.push({
-                        type: "input",
-                        name: "way",
-                        message: "打开文章方式：",
-                        default: "vim",
-                    });
-                }
-
-                return result;
             }
 
             return {
@@ -47,17 +31,8 @@ module.exports = (argv) => {
             };
         })
         .then((q) => inquirer.prompt(q))
-        .then(({ posts, post, way = edit }) => {
-            if (edit) {
-                printPost(post);
-                require("./edit")({
-                    ...argv,
-                    edit: way,
-                    path: post.path,
-                }, globalList);
-            } else {
-                posts.map(printPost);
-            }
+        .then(({ posts }) => {
+            posts.map(printPost);
         })
         .catch((e) => {
             if (e.isTtyError) {
