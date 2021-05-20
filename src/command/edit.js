@@ -11,7 +11,7 @@ module.exports = async (argv, blogList) => {
 
         const q = [];
 
-        if (!edit) {
+        if (typeof edit !== "string") {
             q.unshift({
                 type: "input",
                 name: "way",
@@ -46,6 +46,10 @@ module.exports = async (argv, blogList) => {
             _edit = way;
             _path = post ? post.path : path;
         }
+
+        _edit = _edit.trim();
+
+        if (!_edit || typeof _edit !== "string") throw Error("打开文章的方式不合法！");
 
         printText(['运行命令', `${_edit} ${_path}`]);
         exec(`${_edit} ${_path}`, { stdio: 'inherit' });

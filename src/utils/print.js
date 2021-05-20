@@ -21,7 +21,7 @@ const printError = e => {
     if (e instanceof Error) {
         console.error(
             chalk.redBright("[blogger]"),
-            e.name + ": " + e.message
+            e.message
         );
         return;
     }
