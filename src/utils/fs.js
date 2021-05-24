@@ -80,7 +80,7 @@ function getBlogList(params) {
             return {
                 path: "./" + path.relative(CWD, path.resolve(localPath, dirent.name)),
                 title: info.title,
-                date: moment(info.date),
+                date: moment(new Date(info.date)),
             };
         }
         return null;

@@ -9,7 +9,7 @@ const DATE_FORMAT_ENUM = {
 
 function getDate(dateFormat, now = moment()) {
     if (typeof now === 'string') {
-        now = moment(now);
+        now = moment(new Date(now));
     }
     if (!now.isValid()) {
         now = moment();
