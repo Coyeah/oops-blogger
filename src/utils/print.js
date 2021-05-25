@@ -1,9 +1,10 @@
 const chalk = require("chalk");
 
 const printPost = data => {
-    console.info(chalk.greenBright("[blogger]"), chalk.greenBright(`${data.title}`));
-    console.info("   path: ", data.path);
-    console.info("   date: ", data.date);
+    const { title, path, date, isUnknow } = data;
+    console.info(chalk.greenBright("[blogger]"), chalk.greenBright(`${title}`));
+    console.info("   path: ", path);
+    console.info("   date: ", date, isUnknow ? "(modify time)" : "");
     console.info(chalk.blackBright('========='));
 }
 
@@ -17,7 +18,6 @@ const printText = str => {
 
 const printError = e => {
     if (!e) return;
-    
     if (e instanceof Error) {
         console.error(
             chalk.redBright("[blogger]"),

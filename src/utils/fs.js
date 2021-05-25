@@ -71,12 +71,23 @@ const readdirOpts = {
 function getBlogList(params) {
     const { CWD, root, targetPath = path.resolve(CWD, root), } = params;
 
-    const handleSingleFile = (dirent, localPath = targetPath) => {
+    const handleSingleFile = (dirent, localPath, needUnknow = false) => {
         if (MD_REG.test(dirent.name)) {
             // markdown
             const name = dirent.name.replace(MD_REG, "");
             const info = readMarkdown(path.resolve(localPath, name));
-            if (!info) return null;
+            if (!info) {
+                if (!needUnknow) return null;
+
+                // 非通过 blogger 创建的 md
+                const stats = fs.statSync(path.resolve(localPath, dirent.name));
+                return {
+                    path: "./" + path.relative(CWD, path.resolve(localPath, dirent.name)),
+                    title: dirent.name,
+                    date: moment(new Date(stats.mtime)),
+                    isUnknow: true,
+                }
+            };
             return {
                 path: "./" + path.relative(CWD, path.resolve(localPath, dirent.name)),
                 title: info.title,
@@ -96,7 +107,7 @@ function getBlogList(params) {
                             .readdirSync(localPath, readdirOpts)
                             .map((j) => handleSingleFile(j, localPath));
                     }
-                    return handleSingleFile(i);
+                    return handleSingleFile(i, targetPath, true);
                 })
                 .reduce((prev, next) => prev.concat(next), [])
                 .filter((i) => !!i)
