@@ -96,7 +96,7 @@ module.exports = (argv) => {
                     ? answer.title
                     : defaultTitle;
             title = title.trim();
-            const filename = answer.filename.replace(/\s/g, "-");
+            const filename = answer.filename.replace(/(\s|\/)/g, "-");
 
             const targetPath = path.resolve(CWD, root, filename);
             const filePath = isFile
