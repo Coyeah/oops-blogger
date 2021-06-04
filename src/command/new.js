@@ -112,7 +112,7 @@ module.exports = (argv) => {
 
             !isFile && checkFolder(targetPath, true);
             createFile(filePath, content);
-            printText(`《${title}》 新建成功！`)
+            printText(`《${title}》 创建成功！`);
         })
         .catch((e) => {
             if (e.isTtyError) {

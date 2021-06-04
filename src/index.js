@@ -6,9 +6,9 @@ const { DATE_FORMAT_ENUM } = require('./utils/date');
 const CWD = process.cwd();
 const argv = yargs(hideBin(process.argv))
     .usage('Usage: blogger new [title] <options>')
-    .usage('Usage: blogger list <options>')
     .group(['r', 'd', 'f'], '新建文章[new]：')
-    .group(['r', 's', 'e'], '浏览文章[list]：')
+    .usage('Usage: blogger list <options>')
+    .group(['r', 's', 'm', 'e'], '浏览文章[list]：')
     .option('r', {
         alias: 'root',
         describe: '相对路径',
@@ -32,6 +32,12 @@ const argv = yargs(hideBin(process.argv))
         describe: '单页条目数量',
         type: 'number',
         default: 15,
+    })
+    .option('m', {
+        alias: 'multiple',
+        describe: '是否多选',
+        type: 'boolean',
+        default: false,
     })
     .option('e', {
         alias: 'edit',

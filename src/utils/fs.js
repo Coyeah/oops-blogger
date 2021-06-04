@@ -5,6 +5,10 @@ const moment = require("moment");
 const { getDate, DATE_FORMAT_ENUM } = require("./date");
 
 const markdown_reg = /^\-\-\-\n(\s|\S)*\n\-\-\-\n/;
+const MD_REG = /\.md$/;
+const readdirOpts = {
+    withFileTypes: true,
+};
 
 function readMarkdown(targetPath, ext = '.md') {
     const data = fs.readFileSync(targetPath + ext, "utf-8");
@@ -64,10 +68,6 @@ function createFile(targetPath, content) {
     return result;
 }
 
-const MD_REG = /\.md$/;
-const readdirOpts = {
-    withFileTypes: true,
-};
 function getBlogList(params) {
     const { CWD, root, targetPath = path.resolve(CWD, root), } = params;
 

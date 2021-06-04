@@ -4,7 +4,7 @@ const { printError, printPost } = require("../utils/print");
 const { getBlogList } = require("../utils/fs");
 
 module.exports = (argv) => {
-    const { size, edit } = argv;
+    const { size, edit, multiple } = argv;
 
     let globalList = [];
 
@@ -23,7 +23,7 @@ module.exports = (argv) => {
             }
 
             return {
-                type: "checkbox",
+                type: multiple ? "checkbox" : "list",
                 name: "posts",
                 message: "选择文章获取详情：",
                 pageSize: size,
@@ -32,6 +32,9 @@ module.exports = (argv) => {
         })
         .then((q) => inquirer.prompt(q))
         .then(({ posts }) => {
+            if (!Array.isArray(posts)) {
+                posts = [posts];
+            }
             posts.map(printPost);
         })
         .catch((e) => {
