@@ -2,6 +2,7 @@
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const { DATE_FORMAT_ENUM } = require('./utils/date');
+const { errorHandler } = require('./utils/framework');
 
 const CWD = process.cwd();
 const argv = yargs(hideBin(process.argv))
@@ -49,12 +50,15 @@ const argv = yargs(hideBin(process.argv))
 
 (async function () {
     argv.CWD = CWD;
+    let func;
     if (argv._.includes('new')) {
         argv.title = typeof argv._[1] === 'undefined' ? void (0) : String(argv._[1]);
-        await require('./command/new')(argv);
+        func = require('./command/new');
     } else if (argv._.includes('list')) {
-        await require('./command/list')(argv);
+        func = require('./command/list');
     } else if (argv._.includes('edit')) {
-        await require('./command/edit')(argv);
+        func = require('./command/edit');
     }
+
+    errorHandler(() => func(argv));
 })();

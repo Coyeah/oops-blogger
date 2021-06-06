@@ -5,69 +5,13 @@ const path = require("path");
 const moment = require("moment");
 const inquirer = require("inquirer");
 
-const { getDate, DATE_FORMAT_ENUM } = require("../utils/date");
+const { getDate } = require("../utils/date");
 const { checkFolder, createFile } = require("../utils/fs");
-const { printError, printText } = require("../utils/print");
+const { printText } = require("../utils/print");
+const { qTitle, qDateFormat, qDate, qFileNameFunc } = require("../utils/question");
 
 const TEMPLATE_PATH = path.join(__dirname, "../template/text_v1.ejs");
 const TEMPLATE_FILENAME = "index";
-const QUERTION_ITEM = {
-    TITLE: {
-        type: "input",
-        name: "title",
-        validate(value) {
-            if (!value.trim()) {
-                return "请输入标题！";
-            }
-            return true;
-        },
-        message: "标题",
-    },
-    DATE: {
-        type: "input",
-        name: "date",
-        message: "时间",
-        default: () => getDate("ymdhms"),
-    },
-    DATE_FORMAT: {
-        type: "list",
-        name: "dateFormat",
-        message: "时间格式",
-        default: DATE_FORMAT_ENUM.YMDHMS,
-        choices: [
-            {
-                name: "YYYY-MM-DD HH:mm:ss",
-                value: DATE_FORMAT_ENUM.YMDHMS,
-            },
-            {
-                name: "YYYY-MM-DD",
-                value: DATE_FORMAT_ENUM.YMD,
-            },
-            {
-                name: "ISO",
-                value: DATE_FORMAT_ENUM.ISO,
-            },
-            {
-                name: "时间戳",
-                value: DATE_FORMAT_ENUM.TIMESTAMP,
-            },
-        ],
-    },
-    FILE_NAME(defaultTitle) {
-        return {
-            type: "input",
-            name: "filename",
-            message: "文件名称",
-            default(answer) {
-                const title =
-                    typeof answer.title === "string"
-                        ? answer.title.trim()
-                        : defaultTitle.trim();
-                return title.replace(/(\s|\.)/g, "-");
-            },
-        };
-    },
-};
 
 module.exports = (argv) => {
     if (!argv) return;
@@ -80,28 +24,26 @@ module.exports = (argv) => {
     } = argv;
 
     const qList = [
-        defaultTitle ? null : QUERTION_ITEM.TITLE,
-        defaultDateFormat ? null : QUERTION_ITEM.DATE_FORMAT,
-        QUERTION_ITEM.DATE,
-        QUERTION_ITEM.FILE_NAME(defaultTitle),
+        defaultTitle ? null : qTitle,
+        defaultDateFormat ? null : qDateFormat,
+        qDate,
+        qFileNameFunc(defaultTitle),
     ].filter((i) => !!i);
 
-    inquirer
+    return inquirer
         .prompt(qList)
         .then((answer) => {
-            const dateFormat = answer.dateFormat || defaultDateFormat;
+            const { dateFormat = defaultDateFormat, filename } = answer;
             const date = getDate(dateFormat, moment(answer.date));
-            let title =
-                typeof answer.title === "string"
-                    ? answer.title
-                    : defaultTitle;
-            title = title.trim();
-            const filename = answer.filename.replace(/(\s|\/)/g, "-");
+            const title = (typeof answer.title === "string" ? answer.title : defaultTitle || '').trim();
+            // 绝对路径 - 目标文件
+            let targetPath = path.resolve(CWD, root, filename);
 
-            const targetPath = path.resolve(CWD, root, filename);
-            const filePath = isFile
-                ? targetPath
-                : path.resolve(targetPath, TEMPLATE_FILENAME);
+            if (!isFile) {
+                checkFolder(targetPath, true);
+                targetPath = path.resolve(targetPath, TEMPLATE_FILENAME);
+            }
+            // 获取模版构建内容
             const content = require("ejs").render(
                 fs.readFileSync(TEMPLATE_PATH, "utf-8"),
                 {
@@ -110,15 +52,7 @@ module.exports = (argv) => {
                 }
             );
 
-            !isFile && checkFolder(targetPath, true);
-            createFile(filePath, content);
-            printText(`《${title}》 创建成功！`);
-        })
-        .catch((e) => {
-            if (e.isTtyError) {
-                printError("render error, please change CMD!");
-            } else {
-                printError(e)
-            }
+            const v = createFile(targetPath, content);
+            printText(`《${title}》 创建成功！${!!v ? '版本：v' + v : ''}`);
         });
 };

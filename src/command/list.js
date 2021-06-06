@@ -1,6 +1,8 @@
+"use strict";
+
 const inquirer = require("inquirer");
 
-const { printError, printPost } = require("../utils/print");
+const { printPost } = require("../utils/print");
 const { getBlogList } = require("../utils/fs");
 
 module.exports = (argv) => {
@@ -13,7 +15,7 @@ module.exports = (argv) => {
         return;
     }
 
-    getBlogList(argv)
+    return getBlogList(argv)
         .then((list) => {
 
             globalList = list;
@@ -37,11 +39,4 @@ module.exports = (argv) => {
             }
             posts.map(printPost);
         })
-        .catch((e) => {
-            if (e.isTtyError) {
-                printError("render error, please change CMD!");
-            } else {
-                printError(e);
-            }
-        });
 };

@@ -2,9 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const moment = require("moment");
 
+const { tryTo } = require("./utils");
 const { getDate, DATE_FORMAT_ENUM } = require("./date");
 
 const markdown_reg = /^\-\-\-\n(\s|\S)*\n\-\-\-\n/;
+const markdown_version_reg = /\_v(\d+)$/;
 const MD_REG = /\.md$/;
 const readdirOpts = {
     withFileTypes: true,
@@ -22,8 +24,13 @@ function readMarkdown(targetPath, ext = '.md') {
         .forEach((i) => {
             if (!i) return;
             const [title, content] = i.split(/\:\s/);
-            result[title] = content.replace(/(\"|\')/g, "");
+            result[title] = content.replace(/(\"|\')/g, "").trim();
         });
+
+    const v = targetPath.match(markdown_version_reg);
+    if (v) {
+        result.version = v[1];
+    }
 
     return result;
 }
@@ -48,20 +55,23 @@ function checkFolder(targetPath, mkdir = false) {
     return result;
 }
 
+/**
+ * 创建文件，若遇到相同文件名称可区分版本
+ * @param {string} targetPath 文件路径
+ * @param {*} content 文件内容
+ * @returns version number | null
+ */
 function createFile(targetPath, content) {
     if (!targetPath) return false;
     let v = 0;
-    let result = false;
-    while (!result) {
+    let result = null;
+    while (result === null && v < 50) {
         const suffix = (v === 0 ? "" : `_v${v}`) + ".md";
-        try {
-            const stats = fs.statSync(targetPath + suffix);
-            if (stats.isDirectory()) {
-                throw new Error();
-            }
-        } catch (e) {
+        const stats = tryTo(() => fs.statSync(targetPath + suffix), null);
+        if (!stats) {
             fs.writeFileSync(targetPath + suffix, content);
-            result = true;
+            result = v;
+            break;
         }
         v++;
     }
@@ -92,6 +102,7 @@ function getBlogList(params) {
                 path: "./" + path.relative(CWD, path.resolve(localPath, dirent.name)),
                 title: info.title,
                 date: moment(new Date(info.date)),
+                version: info.version,
             };
         }
         return null;
@@ -115,7 +126,7 @@ function getBlogList(params) {
                 .map((i) => {
                     i.date = getDate(DATE_FORMAT_ENUM.YMDHMS, i.date);
                     return {
-                        name: i.title,
+                        name: `${i.title}${i.version ? ` | 版本 ${i.version}` : ''}`,
                         value: i,
                     };
                 });
