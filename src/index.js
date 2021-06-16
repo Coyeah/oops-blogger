@@ -8,7 +8,7 @@ const CWD = process.cwd();
 const argv = yargs(hideBin(process.argv))
     .usage('Usage: blogger new [title] <options>')
     .group(['r', 'd', 'f'], '新建文章[new]：')
-    .usage('Usage: blogger list <options>')
+    .usage('Usage: blogger list/ls <options>')
     .group(['r', 's', 'm', 'e'], '浏览文章[list]：')
     .option('r', {
         alias: 'root',
@@ -50,11 +50,12 @@ const argv = yargs(hideBin(process.argv))
 
 (async function () {
     argv.CWD = CWD;
-    let func;
+    let func = () => {};
+    
     if (argv._.includes('new')) {
         argv.title = typeof argv._[1] === 'undefined' ? void (0) : String(argv._[1]);
         func = require('./command/new');
-    } else if (argv._.includes('list')) {
+    } else if (argv._.includes('list') || argv._.includes('ls')) {
         func = require('./command/list');
     } else if (argv._.includes('edit')) {
         func = require('./command/edit');
